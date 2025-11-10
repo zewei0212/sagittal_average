@@ -1,15 +1,3 @@
-# test_sagittal_brain.py
-# -*- coding: utf-8 -*-
-"""
-Tests for Charlene's sagittal_brain.py.
-
-These tests build minimal NumPy arrays that *force* a distinction between
-row-wise vs column-wise averaging, catch accidental transposes, and ensure
-the output shape matches the *intended* semantics: "average per row (sagittal/horizontal plane)".
-
-We avoid brittle string comparisons by reading the numeric CSV back with NumPy.
-"""
-
 import numpy as np
 import numpy.testing as npt
 import pathlib
@@ -142,3 +130,28 @@ def test_transpose_not_accidentally_applied(tmp_path: pathlib.Path):
 
     expected = np.concatenate([np.zeros(5), np.ones(5)])[np.newaxis, :]
     npt.assert_allclose(out, expected, atol=1e-12, err_msg="Unexpected transpose or axis misuse detected")
+
+
+import numpy as np, subprocess, sys, shutil
+
+
+m, n = 20, 20
+inp = np.zeros((m, n), dtype=int)
+inp[:, -1] = 1
+
+
+np.savetxt("brain_sample.csv", inp, fmt='%d', delimiter=',')
+
+subprocess.run(
+    [sys.executable, "sagittal_brain.py", "brain_sample.csv", "-o", "brain_average.csv"],
+    check=True
+)
+
+arr_in  = np.loadtxt("brain_sample.csv",  delimiter=',', ndmin=2)
+arr_out = np.loadtxt("brain_average.csv", delimiter=',', ndmin=2)
+
+print("INPUT  brain_sample.csv  shape:", arr_in.shape)
+print(arr_in)
+print("\nOUTPUT brain_average.csv shape:", arr_out.shape)
+print(arr_out)
+
