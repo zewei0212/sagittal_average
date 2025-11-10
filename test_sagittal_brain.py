@@ -3,6 +3,9 @@ import numpy.testing as npt
 import pathlib
 import importlib.util
 import sys
+from pathlib import Path
+import numpy as np, subprocess, sys, shutil
+
 
 # --- Helper: import run_averages(file_input, file_output) from sagittal_brain.py ---
 # This makes the test file runnable next to sagittal_brain.py without installing a package.
@@ -132,9 +135,6 @@ def test_transpose_not_accidentally_applied(tmp_path: pathlib.Path):
     npt.assert_allclose(out, expected, atol=1e-12, err_msg="Unexpected transpose or axis misuse detected")
 
 
-import numpy as np, subprocess, sys, shutil
-
-
 m, n = 20, 20
 inp = np.zeros((m, n), dtype=int)
 inp[:, -1] = 1
@@ -156,9 +156,6 @@ print("\nOUTPUT brain_average.csv shape:", arr_out.shape)
 print(arr_out)
 
 
-import numpy as np
-from pathlib import Path
-
 input_list = [[0.1]*20]  # Python list
 input_array = np.array(input_list, dtype=float)  
 
@@ -171,5 +168,17 @@ output_array = np.loadtxt(out_path, delimiter=',', ndmin=2)
 print("Loaded output shape:", output_array.shape)
 print("First few values:", output_array[0, :5])
 
+
+out = output_array  # shape (1, N), dtype float (as loaded)
+
+expected = np.full((1, out.shape[1]), 1.0/20.0, dtype=float)
+
+expected_for_file = np.round(expected, 1)   # comment out if you increased output precision
+
+ok = np.allclose(out, expected_for_file, rtol=1e-07, atol=1e-08)
+print("All close? ->", ok)
+
+np.testing.assert_allclose(out, expected_for_file, rtol=1e-07, atol=1e-08)
+print("assert_allclose passed.")
 
 
