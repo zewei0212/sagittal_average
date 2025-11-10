@@ -155,3 +155,21 @@ print(arr_in)
 print("\nOUTPUT brain_average.csv shape:", arr_out.shape)
 print(arr_out)
 
+
+import numpy as np
+from pathlib import Path
+
+input_list = [[0.1]*20]  # Python list
+input_array = np.array(input_list, dtype=float)  
+
+in_path = Path("brain_sample.csv")
+np.savetxt(in_path, input_array, fmt='%.6f', delimiter=',')
+
+out_path = Path("brain_average.csv")
+output_array = np.loadtxt(out_path, delimiter=',', ndmin=2)
+
+print("Loaded output shape:", output_array.shape)
+print("First few values:", output_array[0, :5])
+
+
+
