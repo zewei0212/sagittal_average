@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sagittal-average"
+version = "0.1.0"
+description = "Compute sagittal-plane averages from CT/MRI-derived grids."
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{ name = "Charlene Bultoc" }]
+license = { text = "MIT" }
+dependencies = ["numpy>=1.20"]
+
+[project.scripts]
+sagittal-average = "sagittal_average.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
