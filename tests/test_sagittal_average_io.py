@@ -2,6 +2,7 @@ import numpy as np
 import numpy.testing as npt
 from pathlib import Path
 from sagittal_average.sagittal_brain import run_averages
+run_averages("brain_sample.csv", "brain_average.csv")
 
 def test_horizontal_stripe_row_mean(tmp_path: Path):
     
